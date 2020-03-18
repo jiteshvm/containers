@@ -8,12 +8,12 @@ class vector
 private:
 
 	T* ptr_;
-	int size_;
-	int capacity_;
+	size_t size_;
+	size_t capacity_;
 
 public:
 	
-	vector(int capacity = 16) 
+	vector(size_t capacity = 16) 
 	{
 		if(capacity > 0) {
 			ptr_ = new T[capacity];
@@ -22,23 +22,23 @@ public:
 		}
 	}
 
-	int size() { return size_; }
-	int capacity() { return capacity_; }
+	size_t size() { return size_; }
+	size_t capacity() { return capacity_; }
 	bool IsEmpty() { return size_ == 0; }
 
-	T& Get(int index)
+	T& Get(size_t index)
 	{
 		return ptr_[index];
 	}
 
-	void Set(int index, T&& element)
+	void Set(size_t index, T&& element)
 	{
 		ptr_[index] = element;
 	}
 
 	void Clear()
 	{
-		for(int i = 0; i < capacity_ ; ++i) {
+		for(size_t i = 0; i < capacity_ ; ++i) {
 			ptr_[i] = NULL;
 		}
 		size_ = 0;
@@ -60,7 +60,7 @@ public:
 			// double the capacity
 			capacity_ *= 2;
 			T* newptr = new T[capacity_];
-			for (int i = 0; i < capacity_; ++i) {
+			for (size_t i = 0; i < size_; ++i) {
 				newptr[i] = ptr_[i];
 			}
 			delete[] ptr_;
@@ -75,7 +75,7 @@ public:
 			// double the capacity
 			capacity_ *= 2;
 			T* newptr = new T[capacity_];
-			for(int i = 0; i < capacity_; ++i) {
+			for(size_t i = 0; i < capacity_; ++i) {
 				newptr[i] = ptr_[i];
 			}
 			delete[] ptr_;
@@ -89,7 +89,7 @@ public:
 		ptr_[size_--] = NULL;
 	}
 
-	T RemoveAt(int index)
+	T RemoveAt(size_t index)
 	{
 		if(index < 0 || index >= size_)
 			return NULL;
@@ -97,7 +97,7 @@ public:
 		T data = ptr_[index];
 		T* newptr = new T[size_ - 1];
 
-		for(int i = 0, j = 0; i < size_; ++i, ++j) {
+		for(size_t i = 0, j = 0; i < size_; ++i, ++j) {
 			if( i == index) {
 				j--;
 				continue;
@@ -112,7 +112,7 @@ public:
 
 	bool Remove(T& element)
 	{
-		for(int i = 0; i < size_; ++i) {
+		for(size_t i = 0; i < size_; ++i) {
 			if(&ptr_[i] == &element) {
 				RemoveAt(i);
 				return true;

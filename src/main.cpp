@@ -1,6 +1,7 @@
 #include <iostream>
 #include "vector.h"
 #include <vector>
+#include <windows.h>
 
 //using namespace containers;
 
@@ -11,83 +12,44 @@ public:
 	TestClass(int t = 0) { x = t; }
 };
 
-int main(){
+void test_add() {
+	long num_additions = 1000000;
+	LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;
+	LARGE_INTEGER Frequency;
+	std::vector<TestClass> vec_add1;
+	containers::vector<TestClass> vec_add2;
+	//vec_add1.reserve(num_additions);
 
-	std::vector<TestClass> vec1;
-	//TestClass t1(5);
-	//std::cout << &TestClass(5) << std::endl;
-
-	containers::vector<TestClass> *vec2 = new containers::vector<TestClass>();
-
-	std::cout << "push.." << std::endl;
-	for (int i = 0; i < 10; ++i) {
-		TestClass t(i);
-		//vec1.push_back(t);
-		vec2->Add(t);
-		//std::cout << vec1.size() << " , " << vec1.capacity() << std::endl;
-		std::cout << vec2->size() << " , " << vec2->capacity() << std::endl;
-		for (int i = 0; i < vec2->capacity(); ++i) {
-			std::cout << vec2->Get(i).x << " ";
-		}
-		std::cout << std::endl;
-	}
-	std::cout << "pop.." << std::endl;
-	for (int i = 0; i < 10; ++i) {
-		//vec1.pop_back();
-		vec2->Pop_Back();
-		//std::cout << vec1.size() << " , " << vec1.capacity() << std::endl;
-		std::cout << vec2->size() << " , " << vec2->capacity() << std::endl;
-		for (int i = 0; i < vec2->capacity(); ++i) {
-			std::cout << vec2->Get(i).x << " ";
-		}
-		std::cout << std::endl;
-	}
+	QueryPerformanceFrequency(&Frequency);
+	QueryPerformanceCounter(&StartingTime);
 	
+	for (int i = 0; i < num_additions; ++i) {
+		vec_add1.push_back(TestClass(i));
+	}
+	QueryPerformanceCounter(&EndingTime);
 
+	ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+	ElapsedMicroseconds.QuadPart *= 1000000;
+	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+	double t = double(ElapsedMicroseconds.QuadPart) / 1000000.0f;
+	std::cout << num_additions << " additions in std::vector took : " << t << " microseconds " << std::endl;
+	std::cout << "size : " << vec_add1.size() << " , capacity : " << vec_add1.capacity() << std::endl;
+	QueryPerformanceFrequency(&Frequency);
+	QueryPerformanceCounter(&StartingTime);
+	for (int i = 0; i < num_additions; ++i) {
+		vec_add2.Push_Back(TestClass(i));
+	}
+	QueryPerformanceCounter(&EndingTime);
 
+	ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+	ElapsedMicroseconds.QuadPart *= 1000000;
+	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+	t = double(ElapsedMicroseconds.QuadPart) / 1000000.0f;
+	std::cout << num_additions << " additions in containers::vector took : " << t << " microseconds " << std::endl;
+	std::cout <<"size : " << vec_add2.size() << " , capacity : " << vec_add2.capacity() << std::endl;
+}
 
-	//
-	//for (int i = 0; i < 10; ++i) {
-	//	TestClass t(i);
-	//	vec2->Add(t);
-	//	//vec2->Add(TestClass(i));
-	//}
-	//
-	//for (int i = 0; i < vec2->size(); ++i) {
-	//	std::cout << vec2->Get(i).x << " ";
-	//}
-
-	//std::cout << std::endl;
-
-	//for (int i = 0; i < vec2->size(); ++i) {
-	//	vec2->Set(i, TestClass(i+10));
-	//}
-
-	//for (int i = 0; i < vec2->size(); ++i) {
-	//	std::cout << vec2->Get(i).x << " ";
-	//}
-	//std::cout << std::endl;
-
-	//std::cout << "capacity = " << vec2->capacity() << " size = " << vec2->size() << std::endl;
-	//
-	//std::cout << "removing... " << vec2->Get(4).x << std::endl;
-	//vec2->Remove(vec2->Get(4));
-
-	//std::cout << "capacity = " << vec2->capacity() << " size = " << vec2->size() << std::endl;
-
-	//for (int i = 0; i < vec2->size(); ++i) {
-	//	std::cout << vec2->Get(i).x << " ";
-	//}
-	//std::cout << std::endl;
-	//
-	//std::cout << "clearing... " << std::endl;
-	//vec2->Clear();
-
-	//for (int i = 0; i < vec2->size(); ++i) {
-	//	std::cout << vec2->Get(i).x << " ";
-	//}
-	//std::cout << "capacity = " << vec2->capacity() << " size = " << vec2->size() << std::endl;
-
-	//std::cout << std::endl;
+int main(){
+	test_add();
   	return 0; 
 }
